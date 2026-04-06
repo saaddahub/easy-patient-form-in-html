@@ -1,53 +1,474 @@
-<!-- Make an HTML form to collect the information for admitting patients in a hospital.-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HOSPITAL MANAGEMENT SYSTEM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration UI</title>
+    <style>
+        body{
+            background-color: #aa4bb9c3;
+        }
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #0041f4;
+            --bg: #f8fafc;
+            --surface: #905c5c21;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #93c5fd;
+            --error: #ef4444;
+            --success: #10b981;
+            --radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        /* Modern Card Wrapper */
+        .container {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 650px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        /* Responsive Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Labels and typography elements */
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        /* Inputs core styling */
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--surface);
+            color: var(--text-main);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Focus State Magic */
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Stylized Radio Options */
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            height: 100%;
+            padding: 0.5rem 0;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .radio-label input[type="radio"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        /* Error state animations */
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.4rem;
+            min-height: 1.2rem;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: var(--transition);
+        }
+
+        .form-group.has-error input,
+        .form-group.has-error select,
+        .form-group.has-error textarea {
+            border-color: var(--error);
+            background-color: #fef2f2;
+        }
+
+        .form-group.has-error label {
+            color: var(--error);
+        }
+
+        .form-group.has-error .error-message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Buttons Section */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        button, input[type="reset"] {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        input[type="reset"] {
+            background-color: white;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+        }
+
+        input[type="reset"]:hover {
+            background-color: var(--bg);
+            color: var(--text-main);
+            border-color: var(--text-muted);
+        }
+
+        /* Loading Spinner Animation */
+        .spinner {
+            display: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .submitting .spinner {
+            display: inline-block;
+        }
+        
+        .submitting .btn-primary {
+            opacity: 0.85;
+            cursor: not-allowed;
+            transform: translateY(0);
+        }
+
+        /* Interactive Success Toast Notification */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            .button-group {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
 </head>
 <body>
-    <form action="/collect patient info" align="center">
+
+    <!-- Success Toast Message -->
+    <div class="toast" id="successToast">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        Patient Registered Successfully!
+    </div>
+
+    <!-- Main Interactive Form Section -->
+    <div class="container">
         <h1>HOSPITAL MANAGEMENT SYSTEM</h1>
         
-        <label>Name</label>
-        <input type="text" placeholder="Name"> <br><br>
-        
-        <label>Age</label>
-        <input type="number" placeholder="Age"><br><br>
-        
-        <label>Gender</label>
-        <input type="radio" name="gender" value="Male"/> Male
-        <input type="radio" name="gender" value="Female" /> Female<br><br>
-        
-        <label>Address</label>
-        <input type="text" placeholder="Address"><br><br>
+        <form id="patientForm" action="/collect-patient-info" novalidate>
+            <div class="form-grid">
+                
+                <div class="form-group full-width">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="E.g. John Doe" required>
+                    <span class="error-message">Please enter the patient's full name.</span>
+                </div>
 
-        <label>Phone</label>
-        <input type="number" placeholder="Phone Number"><br><br>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" placeholder="E.g. 35" min="1" max="150" required>
+                    <span class="error-message">A valid age is required.</span>
+                </div>
 
-        <label>Email</label>
-        <input type="email" placeholder="your@email.com"> <br><br>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="Male" required> Male
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="Female"> Female
+                        </label>
+                    </div>
+                    <span class="error-message">Please select a gender.</span>
+                </div>
 
-        <label>Doctor</label>
-        <select>
-            <option>Doctor Ali</option>
-            <option>Doctor Alina</option>
-            <option>Doctor Sara</option>
-        </select>
-        <br><br>
+                <div class="form-group full-width">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" placeholder="123 Main St, City" required>
+                    <span class="error-message">Address details are required.</span>
+                </div>
 
-        <label>Date</label>
-        <input type="date"><br><br>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="number" id="phone" name="phone" placeholder="1234567890" required>
+                    <span class="error-message">Please enter a valid contact number.</span>
+                </div>
 
-        <label>Time</label>
-        <input type="time"><br><br>
-        
-        <label>Symptoms</label>
-        <textarea placeholder="Describe your symptoms"></textarea><br><br>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="patient@email.com" required>
+                    <span class="error-message">A valid email address is required.</span>
+                </div>
 
-        <input type="Submit">
-        <input type="Reset">
-    </form>
+                <div class="form-group full-width">
+                    <label for="doctor">Assigned Doctor</label>
+                    <select id="doctor" name="doctor" required>
+                        <option value="" disabled selected>Select a Specialist...</option>
+                        <option value="Ali">Doctor Ali</option>
+                        <option value="Alina">Doctor Alina</option>
+                        <option value="Sara">Doctor Sara</option>
+                    </select>
+                    <span class="error-message">Please select an available doctor.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Appointment Date</label>
+                    <input type="date" id="date" name="date" required>
+                    <span class="error-message">Please pick a scheduled date.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Appointment Time</label>
+                    <input type="time" id="time" name="time" required>
+                    <span class="error-message">Please pick a scheduled time.</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="symptoms">Symptoms Overview</label>
+                    <textarea id="symptoms" name="symptoms" placeholder="Please describe the main reason for the visit today..." required></textarea>
+                    <span class="error-message">Symptom details cannot be empty.</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <input type="reset" value="Clear Form">
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span class="btn-text">Submit Registration</span>
+                    <span class="spinner"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- JavaScript that drives the UI States & Validations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('patientForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const toast = document.getElementById('successToast');
+
+            form.addEventListener('submit', (e) => {
+                // Prevent actual page reload
+                e.preventDefault();
+                let isValid = true;
+                
+                // Reset all error states
+                document.querySelectorAll('.form-group').forEach(group => {
+                    group.classList.remove('has-error');
+                });
+
+                // Custom Inline Validation Logic
+                const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+                
+                inputs.forEach(input => {
+                    if (input.type === 'radio') {
+                        const name = input.name;
+                        const checked = document.querySelector(`input[name="${name}"]:checked`);
+                        if (!checked) {
+                            input.closest('.form-group').classList.add('has-error');
+                            isValid = false;
+                        }
+                    } 
+                    else if (!input.value.trim()) {
+                        input.closest('.form-group').classList.add('has-error');
+                        isValid = false;
+                    }
+                    else if (input.type === 'email' && !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(input.value)) {
+                        input.closest('.form-group').classList.add('has-error');
+                        isValid = false;
+                    }
+                });
+
+                if (isValid) {
+                    // Start Loading State Interaction
+                    form.classList.add('submitting');
+                    submitBtn.querySelector('.btn-text').textContent = 'Processing Data...';
+                    
+                    // Simulate processing time
+                    setTimeout(() => {
+                        form.classList.remove('submitting');
+                        submitBtn.querySelector('.btn-text').textContent = 'Submit Registration';
+                        
+                        // Fire the Success Toast notification
+                        toast.classList.add('show');
+                        form.reset(); // Clear the form
+
+                        // Dismiss toast after 4 seconds automatically
+                        setTimeout(() => {
+                            toast.classList.remove('show');
+                        }, 4000);
+                        
+                    }, 1800); // 1.8 second delay
+                } else {
+                    // CSS Shake animation syntax if there is an error
+                    form.animate([
+                        { transform: 'translateX(0)' },
+                        { transform: 'translateX(-10px)' },
+                        { transform: 'translateX(10px)' },
+                        { transform: 'translateX(-10px)' },
+                        { transform: 'translateX(10px)' },
+                        { transform: 'translateX(0)' }
+                    ], { duration: 400, easing: 'ease-in-out' });
+                }
+            });
+
+            // Revert error states instantly when user starts typing again
+            const fields = form.querySelectorAll('input, select, textarea');
+            fields.forEach(field => {
+                field.addEventListener('input', () => {
+                    field.closest('.form-group').classList.remove('has-error');
+                });
+            });
+        });
+    </script>
 </body>
 </html>
